@@ -10,10 +10,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Entity
+@Builder
 public class EmailTemplate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +30,9 @@ public class EmailTemplate {
     @Column(columnDefinition = "TEXT")
     private String textBody;
 
-    private LocalDateTime createdDate;
+    private final LocalDateTime createdDate = LocalDateTime.now();
     private LocalDateTime updatedDate;
 
     @OneToMany(mappedBy = "emailTemplate")
-    private List<CampaignEmailTemplate> campaignEmailTemplates = new ArrayList<>();
+    private final List<CampaignEmailTemplate> campaignEmailTemplates = new ArrayList<>();
 }
