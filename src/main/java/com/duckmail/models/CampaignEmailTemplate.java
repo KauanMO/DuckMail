@@ -1,13 +1,10 @@
 package com.duckmail.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,4 +30,7 @@ public class CampaignEmailTemplate {
     @ManyToOne
     @JoinColumn(name = "email_template_id", nullable = false)
     private EmailTemplate emailTemplate;
+
+    @OneToMany(mappedBy = "campaignEmailTemplate")
+    private final List<Recipient> recipients = new ArrayList<>();
 }

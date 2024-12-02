@@ -1,5 +1,6 @@
 package com.duckmail.services.impl;
 
+import com.duckmail.services.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.duckmail.dtos.campaignEmailTemplate.InCampaignEmailTemplateDTO;
@@ -39,5 +40,12 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
         repository.save(newCampaignEmailTemplate);
 
         return newCampaignEmailTemplate;
+    }
+
+    @Override
+    public CampaignEmailTemplate findById(Long id) throws NotFoundException {
+        return repository
+                .findById(id)
+                .orElseThrow(NotFoundException::new);
     }
 }

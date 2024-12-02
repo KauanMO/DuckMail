@@ -1,5 +1,6 @@
 package com.duckmail.services.impl;
 
+import com.duckmail.services.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.duckmail.dtos.emailTemplate.InEmailTemplateDTO;
@@ -32,11 +33,9 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
     }
 
     @Override
-    public EmailTemplate findById(Long id) throws Exception {
-        EmailTemplate emailTemplateFound = repository
+    public EmailTemplate findById(Long id) throws NotFoundException {
+        return repository
                 .findById(id)
-                .orElseThrow(() -> new Exception());
-    
-        return emailTemplateFound;
+                .orElseThrow(NotFoundException::new);
    }
 }
