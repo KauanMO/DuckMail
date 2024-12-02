@@ -4,4 +4,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.duckmail.models.Campaign;
 
-public interface ICampaignRepository extends JpaRepository<Campaign, Long> { }
+public interface CampaignRepository extends JpaRepository<Campaign, Long> { }

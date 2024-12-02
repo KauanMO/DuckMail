@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.duckmail.models.Recipient;
 
-public interface IRecipientRepository extends JpaRepository<Recipient, Long> {
+public interface RecipientRepository extends JpaRepository<Recipient, Long> {
 }
