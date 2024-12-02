@@ -13,7 +13,6 @@ import lombok.Data;
 @Data
 @Entity
 public class ClickHistory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
