@@ -4,14 +4,14 @@ import org.springframework.stereotype.Service;
 
 import com.duckmail.dtos.campaign.InCampaignDTO;
 import com.duckmail.models.Campaign;
-import com.duckmail.repositories.ICampaignRepository;
-import com.duckmail.services.ICampaignService;
+import com.duckmail.repositories.CampaignRepository;
+import com.duckmail.services.CampaignService;
 
 @Service
-public class CampaignService implements ICampaignService {
-    private final ICampaignRepository repository;
+public class CampaignServiceImpl implements CampaignService {
+    private final CampaignRepository repository;
 
-    public CampaignService(ICampaignRepository repository) {
+    public CampaignServiceImpl(CampaignRepository repository) {
         this.repository = repository;
     }
 

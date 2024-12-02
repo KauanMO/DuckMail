@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.duckmail.dtos.campaign.InCampaignDTO;
 import com.duckmail.dtos.campaign.OutCampaignDTO;
 import com.duckmail.models.Campaign;
-import com.duckmail.services.ICampaignService;
+import com.duckmail.services.CampaignService;
 
 @RestController
 @RequestMapping("campaign")
 public class CampaignController {
-    public final ICampaignService service;
+    public final CampaignService service;
 
-    public CampaignController(ICampaignService service) {
+    public CampaignController(CampaignService service) {
         this.service = service;
     }
 

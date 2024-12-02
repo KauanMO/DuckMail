@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.duckmail.models.ClickHistory;
 
-public interface IClickHistoryRepository extends JpaRepository<ClickHistory, Long> {
+public interface ClickHistoryRepository extends JpaRepository<ClickHistory, Long> {
 
 }
