@@ -33,6 +33,6 @@ public class CampaignServiceImpl implements CampaignService {
     public Campaign findById(Long id) throws NotFoundException {
         return repository
                 .findById(id)
-                .orElseThrow(() -> new NotFoundException());
+                .orElseThrow(NotFoundException::new);
     }
 }
