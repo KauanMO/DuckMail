@@ -9,7 +9,6 @@ import com.duckmail.services.EmailTemplateService;
 
 @Service
 public class EmailTemplateServiceImpl implements EmailTemplateService {
-
     private final EmailTemplateRepository repository;
 
     public EmailTemplateServiceImpl(EmailTemplateRepository repository) {
@@ -20,7 +19,7 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
     public EmailTemplate create(InEmailTemplateDTO dto) throws Exception {
         if ((dto.htmlBody() == null && dto.textBody() == null) || (dto.htmlBody() != null && dto.textBody() != null)) 
             throw new Exception("Atribua apenas um corpo html OU de texto ao template de email (Implementar global handler de exceções)");
-        
+
         EmailTemplate newEmailTemplate = EmailTemplate.builder()
                 .name(dto.name())
                 .subject(dto.subject())
@@ -28,7 +27,16 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
                 .textBody(dto.textBody())
                 .build();
 
-        repository.save (newEmailTemplate);
-        return newEmailTemplate ;
-}
+        repository.save(newEmailTemplate);
+        return newEmailTemplate;
+    }
+
+    @Override
+    public EmailTemplate findById(Long id) throws Exception {
+        EmailTemplate emailTemplateFound = repository
+                .findById(id)
+                .orElseThrow(() -> new Exception());
+    
+        return emailTemplateFound;
+   }
 }
