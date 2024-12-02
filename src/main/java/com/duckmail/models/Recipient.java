@@ -6,18 +6,17 @@ import java.util.List;
 
 import com.duckmail.enums.RecipientStatus;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Recipient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +26,10 @@ public class Recipient {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private RecipientStatus status;
+    private final RecipientStatus status = RecipientStatus.PENDING;
 
     private LocalDateTime sentDate;
-    private LocalDateTime createdDate;
+    private final LocalDateTime createdDate = LocalDateTime.now();
 
     @ManyToOne
     private CampaignEmailTemplate campaignEmailTemplate;
@@ -41,6 +40,6 @@ public class Recipient {
     @OneToMany(mappedBy = "recipient")
     private List<ClickHistory> clickHistories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "recipient")
-    private List<DeliveryErrorLog> deliveryErrorLogs = new ArrayList<>();
+    @OneToOne(mappedBy = "recipient")
+    private DeliveryErrorLog deliveryErrorLogs;
 }

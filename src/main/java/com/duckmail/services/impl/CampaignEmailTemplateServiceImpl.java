@@ -40,4 +40,11 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
 
         return newCampaignEmailTemplate;
     }
+
+    @Override
+    public CampaignEmailTemplate findById(Long id) throws Exception {
+        return repository
+                .findById(id)
+                .orElseThrow(Exception::new);
+    }
 }

@@ -30,10 +30,8 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public Campaign findById(Long id) throws Exception {
-        Campaign campaignFound = repository
+        return repository
                 .findById(id)
                 .orElseThrow(() -> new Exception());
-
-        return campaignFound;
     }
 }
