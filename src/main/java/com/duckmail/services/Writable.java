@@ -1,5 +1,5 @@
 package com.duckmail.services;
 
 public interface Writable<ENTITY, DTO> {
-    public ENTITY create(DTO dto);
+    public ENTITY create(DTO dto) throws Exception;
 }

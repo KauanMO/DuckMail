@@ -24,7 +24,7 @@ public class CampaignController {
     }
 
     @PostMapping
-    public ResponseEntity<OutCampaignDTO> postCampaign(@RequestBody InCampaignDTO dto) throws URISyntaxException {
+    public ResponseEntity<OutCampaignDTO> postCampaign(@RequestBody InCampaignDTO dto) throws URISyntaxException, Exception {
         Campaign newCampaign = service.create(dto);
 
         URI newCampaignURL = new URI("/" + newCampaign.getId());
