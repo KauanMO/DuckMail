@@ -1,6 +1,6 @@
 package com.duckmail.dtos.campaignEmailTemplate;
 
-public record InCampaignEmailTemplate(
+public record InCampaignEmailTemplateDTO(
         String url,
         Long campaignId,
         Long emailTemplateId) {
