@@ -1,5 +1,6 @@
 package com.duckmail.services.impl;
 
+import com.duckmail.services.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.duckmail.dtos.campaign.InCampaignDTO;
@@ -29,9 +30,9 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public Campaign findById(Long id) throws Exception {
+    public Campaign findById(Long id) throws NotFoundException {
         return repository
                 .findById(id)
-                .orElseThrow(() -> new Exception());
+                .orElseThrow(() -> new NotFoundException());
     }
 }
