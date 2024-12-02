@@ -13,7 +13,6 @@ import lombok.Data;
 @Data
 @Entity
 public class OpenHistory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
