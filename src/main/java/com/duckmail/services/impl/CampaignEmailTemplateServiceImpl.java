@@ -1,5 +1,8 @@
 package com.duckmail.services.impl;
 
+import com.duckmail.infra.rabbitmq.EmailQueueListenerService;
+import com.duckmail.infra.rabbitmq.RabbitEmailConsumer;
+import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
 import com.duckmail.services.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +20,19 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
     private final CampaignEmailTemplateRepository repository;
     private final CampaignService campaignService;
     private final EmailTemplateService emailTemplateService;
+    private final RabbitEmailProducer rabbitEmailProducer;
+    private final RabbitEmailConsumer rabbitEmailConsumer;
+    private final EmailQueueListenerService emailQueueListenerService;
 
-    public CampaignEmailTemplateServiceImpl(CampaignService campaignService, 
-            EmailTemplateService emailTemplateService,
-            CampaignEmailTemplateRepository repository) {
+    public CampaignEmailTemplateServiceImpl(CampaignService campaignService,
+                                            EmailTemplateService emailTemplateService,
+                                            CampaignEmailTemplateRepository repository, RabbitEmailProducer rabbitEmailProducer, RabbitEmailConsumer rabbitEmailConsumer, RabbitEmailConsumer rabbitEmailConsumer1, EmailQueueListenerService emailQueueListenerService) {
         this.campaignService = campaignService;
         this.emailTemplateService = emailTemplateService;
         this.repository = repository;
+        this.rabbitEmailProducer = rabbitEmailProducer;
+        this.rabbitEmailConsumer = rabbitEmailConsumer1;
+        this.emailQueueListenerService = emailQueueListenerService;
     }
 
     @Override
@@ -38,6 +47,9 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
             .build();
 
         repository.save(newCampaignEmailTemplate);
+
+        rabbitEmailProducer.generateEmailQueue(newCampaignEmailTemplate.getId());
+        emailQueueListenerService.registerListener(newCampaignEmailTemplate.getId(), rabbitEmailConsumer);
 
         return newCampaignEmailTemplate;
     }
