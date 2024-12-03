@@ -3,6 +3,7 @@ package com.duckmail.services.impl;
 import com.duckmail.dtos.recipient.InRecipientDTO;
 import com.duckmail.dtos.recipient.OutRecipientDTO;
 import com.duckmail.dtos.recipient.OutValidRecipientsSegregationDTO;
+import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
 import com.duckmail.models.CampaignEmailTemplate;
 import com.duckmail.models.Recipient;
 import com.duckmail.repositories.RecipientRepository;
@@ -19,10 +20,12 @@ import java.util.List;
 public class RecipientServiceImpl implements RecipientService {
     private final RecipientRepository repository;
     private final CampaignEmailTemplateService campaignEmailTemplateService;
+    private final RabbitEmailProducer rabbitEmailProducer;
 
-    public RecipientServiceImpl(RecipientRepository repository, CampaignEmailTemplateService campaignEmailTemplateService) {
+    public RecipientServiceImpl(RecipientRepository repository, CampaignEmailTemplateService campaignEmailTemplateService, RabbitEmailProducer rabbitEmailProducer) {
         this.repository = repository;
         this.campaignEmailTemplateService = campaignEmailTemplateService;
+        this.rabbitEmailProducer = rabbitEmailProducer;
     }
 
     @Override
@@ -39,6 +42,8 @@ public class RecipientServiceImpl implements RecipientService {
                 .build();
 
         repository.save(newRecipient);
+
+        rabbitEmailProducer.enqueueRecipient(newRecipient);
 
         return newRecipient;
     }
