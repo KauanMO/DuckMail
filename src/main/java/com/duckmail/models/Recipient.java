@@ -35,10 +35,10 @@ public class Recipient {
     private CampaignEmailTemplate campaignEmailTemplate;
 
     @OneToMany(mappedBy = "recipient")
-    private List<OpenHistory> openHistories = new ArrayList<>();
+    private final List<OpenHistory> openHistories = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipient")
-    private List<ClickHistory> clickHistories = new ArrayList<>();
+    private final List<ClickHistory> clickHistories = new ArrayList<>();
 
     @OneToOne(mappedBy = "recipient")
     private DeliveryErrorLog deliveryErrorLogs;
