@@ -1,8 +1,6 @@
 package com.duckmail.services.impl;
 
-import com.duckmail.infra.email.EmailSenderJob;
-import com.duckmail.infra.rabbitmq.EmailQueueListenerService;
-import com.duckmail.infra.rabbitmq.RabbitEmailConsumer;
+import com.duckmail.infra.email.RegisterEmailQueueListenerJob;
 import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
 import com.duckmail.services.exception.NotFoundException;
 import org.quartz.*;
@@ -62,7 +60,7 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
     private void scheduleCampaignEmailTemplate(CampaignEmailTemplate campaignEmailTemplate) throws SchedulerException {
         LocalDateTime campaignScheduledDate = campaignEmailTemplate.getCampaign().getScheduledDate();
 
-        JobDetail jobDetail = JobBuilder.newJob(EmailSenderJob.class)
+        JobDetail jobDetail = JobBuilder.newJob(RegisterEmailQueueListenerJob.class)
                 .withIdentity("Campaign-email-template-job-" + campaignEmailTemplate.getId())
                 .usingJobData("campaignEmailTemplateId", campaignEmailTemplate.getId())
                 .build();

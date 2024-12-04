@@ -16,10 +16,6 @@ public class RabbitEmailConsumer {
     public void consumeMessage(String message) {
         try {
             var queuedEmail = objectMapper.readValue(message, QueuedEmailDTO.class);
-
-
-
-            System.out.println(queuedEmail);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
