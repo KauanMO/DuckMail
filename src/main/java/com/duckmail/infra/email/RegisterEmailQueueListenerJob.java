@@ -9,11 +9,11 @@ import org.quartz.JobExecutionException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EmailSenderJob implements Job {
+public class RegisterEmailQueueListenerJob implements Job {
     private final RabbitEmailConsumer rabbitEmailConsumer;
     private final EmailQueueListenerService emailQueueListenerService;
 
-    public EmailSenderJob(RabbitEmailConsumer rabbitEmailConsumer, EmailQueueListenerService emailQueueListenerService) {
+    public RegisterEmailQueueListenerJob(RabbitEmailConsumer rabbitEmailConsumer, EmailQueueListenerService emailQueueListenerService) {
         this.rabbitEmailConsumer = rabbitEmailConsumer;
         this.emailQueueListenerService = emailQueueListenerService;
     }
