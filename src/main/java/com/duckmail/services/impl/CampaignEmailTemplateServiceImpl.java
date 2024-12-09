@@ -1,6 +1,10 @@
 package com.duckmail.services.impl;
 
+import com.duckmail.infra.email.RegisterEmailQueueListenerJob;
+import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
+import com.duckmail.services.exception.BadRequestException;
 import com.duckmail.services.exception.NotFoundException;
+import org.quartz.*;
 import org.springframework.stereotype.Service;
 
 import com.duckmail.dtos.campaignEmailTemplate.InCampaignEmailTemplateDTO;
@@ -12,34 +16,71 @@ import com.duckmail.services.CampaignEmailTemplateService;
 import com.duckmail.services.CampaignService;
 import com.duckmail.services.EmailTemplateService;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 @Service
 public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateService {
     private final CampaignEmailTemplateRepository repository;
     private final CampaignService campaignService;
     private final EmailTemplateService emailTemplateService;
+    private final RabbitEmailProducer rabbitEmailProducer;
+    private final Scheduler scheduler;
 
-    public CampaignEmailTemplateServiceImpl(CampaignService campaignService, 
-            EmailTemplateService emailTemplateService,
-            CampaignEmailTemplateRepository repository) {
+    public CampaignEmailTemplateServiceImpl(CampaignService campaignService,
+                                            EmailTemplateService emailTemplateService,
+                                            CampaignEmailTemplateRepository repository, RabbitEmailProducer rabbitEmailProducer, Scheduler scheduler) {
         this.campaignService = campaignService;
         this.emailTemplateService = emailTemplateService;
         this.repository = repository;
+        this.rabbitEmailProducer = rabbitEmailProducer;
+        this.scheduler = scheduler;
     }
 
     @Override
     public CampaignEmailTemplate create(InCampaignEmailTemplateDTO dto) throws Exception {
         Campaign campaignFound = campaignService.findById(dto.campaignId());
+
+        if (campaignFound
+                .getScheduledDate()
+                .isBefore(LocalDateTime.now()
+                        .atZone(ZoneId.of("America/Sao_Paulo"))
+                        .toLocalDateTime())) {
+            throw new BadRequestException("Campanha já realizada");
+        }
+
         EmailTemplate emailTemplateFound = emailTemplateService.findById(dto.emailTemplateId());
 
         CampaignEmailTemplate newCampaignEmailTemplate = CampaignEmailTemplate.builder()
-            .url(dto.url())
-            .campaign(campaignFound)
-            .emailTemplate(emailTemplateFound)
-            .build();
+                .url(dto.url())
+                .campaign(campaignFound)
+                .emailTemplate(emailTemplateFound)
+                .build();
 
         repository.save(newCampaignEmailTemplate);
 
+        rabbitEmailProducer.generateEmailQueue(newCampaignEmailTemplate.getId());
+
+        scheduleCampaignEmailTemplate(newCampaignEmailTemplate);
+
         return newCampaignEmailTemplate;
+    }
+
+    private void scheduleCampaignEmailTemplate(CampaignEmailTemplate campaignEmailTemplate) throws SchedulerException {
+        LocalDateTime campaignScheduledDate = campaignEmailTemplate.getCampaign().getScheduledDate();
+
+        JobDetail jobDetail = JobBuilder.newJob(RegisterEmailQueueListenerJob.class)
+                .withIdentity("Campaign-email-template-job-" + campaignEmailTemplate.getId())
+                .usingJobData("campaignEmailTemplateId", campaignEmailTemplate.getId())
+                .build();
+
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withIdentity("Campaign-email-template-trigger-" + campaignEmailTemplate.getId())
+                .startAt(Date.from(campaignScheduledDate.atZone(ZoneId.of("America/Sao_Paulo")).toInstant()))
+                .build();
+
+        scheduler.scheduleJob(jobDetail, trigger);
     }
 
     @Override
