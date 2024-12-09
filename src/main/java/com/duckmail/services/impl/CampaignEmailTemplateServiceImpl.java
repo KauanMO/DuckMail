@@ -2,6 +2,7 @@ package com.duckmail.services.impl;
 
 import com.duckmail.infra.email.RegisterEmailQueueListenerJob;
 import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
+import com.duckmail.services.exception.BadRequestException;
 import com.duckmail.services.exception.NotFoundException;
 import org.quartz.*;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,15 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
     @Override
     public CampaignEmailTemplate create(InCampaignEmailTemplateDTO dto) throws Exception {
         Campaign campaignFound = campaignService.findById(dto.campaignId());
+
+        if (campaignFound
+                .getScheduledDate()
+                .isBefore(LocalDateTime.now()
+                        .atZone(ZoneId.of("America/Sao_Paulo"))
+                        .toLocalDateTime())) {
+            throw new BadRequestException("Campanha já realizada");
+        }
+
         EmailTemplate emailTemplateFound = emailTemplateService.findById(dto.emailTemplateId());
 
         CampaignEmailTemplate newCampaignEmailTemplate = CampaignEmailTemplate.builder()
