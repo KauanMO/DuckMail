@@ -3,7 +3,6 @@ package com.duckmail.controllers;
 import com.duckmail.dtos.recipient.InRecipientDTO;
 import com.duckmail.dtos.recipient.OutRecipientDTO;
 import com.duckmail.dtos.recipient.OutValidRecipientsSegregationDTO;
-import com.duckmail.infra.email.EmailSenderService;
 import com.duckmail.models.Recipient;
 import com.duckmail.services.RecipientService;
 import org.springframework.http.ResponseEntity;

@@ -24,7 +24,7 @@ public class EmailSenderService {
 
     @Async
     protected void sendEmail(String to, String subject, String body) {
-        try{
+        try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
@@ -33,7 +33,7 @@ public class EmailSenderService {
             helper.setSubject(subject);
             helper.setText(body, true);
             javaMailSender.send(mimeMessage);
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
