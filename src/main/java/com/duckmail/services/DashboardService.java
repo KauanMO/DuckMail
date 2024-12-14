@@ -4,4 +4,5 @@ public interface DashboardService {
     Long getTotalDeliveryErrors();
     Long getTotalClickHistories();
     Long getTotalOpenHistories();
+    Long getTotalPendingCampaigns();
 }

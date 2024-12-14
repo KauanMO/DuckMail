@@ -3,6 +3,7 @@ package com.duckmail.controllers;
 import com.duckmail.dtos.dashboard.OutTotalClickHistoriesDTO;
 import com.duckmail.dtos.dashboard.OutTotalDeliveryErrorsDTO;
 import com.duckmail.dtos.dashboard.OutTotalOpenHistoriesDTO;
+import com.duckmail.dtos.dashboard.OutTotalPendingCampaignsDTO;
 import com.duckmail.services.DashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,5 +38,12 @@ public class DashboardController {
         Long totalOpenHistories = service.getTotalOpenHistories();
 
         return ResponseEntity.ok(new OutTotalOpenHistoriesDTO(totalOpenHistories));
+    }
+
+    @GetMapping("total-pending-campaigns")
+    public ResponseEntity<OutTotalPendingCampaignsDTO> getTotalPendingCampaigns() {
+        Long totalPendingCampaigns = service.getTotalPendingCampaigns();
+
+        return ResponseEntity.ok(new OutTotalPendingCampaignsDTO(totalPendingCampaigns));
     }
 }
