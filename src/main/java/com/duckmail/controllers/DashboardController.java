@@ -1,5 +1,6 @@
 package com.duckmail.controllers;
 
+import com.duckmail.dtos.dashboard.OutTotalClickHistoriesDTO;
 import com.duckmail.dtos.dashboard.OutTotalDeliveryErrorsDTO;
 import com.duckmail.services.DashboardService;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,12 @@ public class DashboardController {
         Long totalDeliveryErrors = service.getTotalDeliveryErrors();
 
         return ResponseEntity.ok(new OutTotalDeliveryErrorsDTO(totalDeliveryErrors));
+    }
+
+    @GetMapping("total-clicks")
+    public ResponseEntity<OutTotalClickHistoriesDTO> getTotalClicks() {
+        Long totalClickHistories = service.getTotalClickHistories();
+
+        return ResponseEntity.ok(new OutTotalClickHistoriesDTO(totalClickHistories));
     }
 }
