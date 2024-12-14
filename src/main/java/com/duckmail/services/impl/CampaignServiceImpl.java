@@ -1,5 +1,6 @@
 package com.duckmail.services.impl;
 
+import com.duckmail.enums.CampaignStatus;
 import com.duckmail.services.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +8,8 @@ import com.duckmail.dtos.campaign.InCampaignDTO;
 import com.duckmail.models.Campaign;
 import com.duckmail.repositories.CampaignRepository;
 import com.duckmail.services.CampaignService;
+
+import java.util.List;
 
 @Service
 public class CampaignServiceImpl implements CampaignService {
@@ -34,5 +37,10 @@ public class CampaignServiceImpl implements CampaignService {
         return repository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public List<Campaign> getPendingCampaigns() {
+        return repository.findByStatusIs(CampaignStatus.PENDING);
     }
 }
