@@ -18,7 +18,6 @@ public class OpenHistory {
     private Long id;
 
     private LocalDateTime openedDate;
-    private LocalDateTime lastOpenedDate;
 
     @ManyToOne
     @JoinColumn(name = "recipient_id", nullable = false)

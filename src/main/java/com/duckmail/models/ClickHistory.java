@@ -8,10 +8,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClickHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,10 +25,8 @@ public class ClickHistory {
 
     private String browserType;
     private String deviceType;
-    private int clickCount;
 
-    private LocalDateTime firstOpenedDate;
-    private LocalDateTime lastOpenedDate;
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "recipient_id", nullable = false)
