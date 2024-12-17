@@ -2,6 +2,7 @@ package com.duckmail.infra.rabbitmq;
 
 import com.duckmail.dtos.email.QueuedEmailDTO;
 import com.duckmail.models.Recipient;
+import com.duckmail.services.impl.EmailBodyBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Queue;
@@ -29,7 +30,12 @@ public class RabbitEmailProducer {
     public void enqueueRecipient(Recipient recipient) {
         String queueName = "campaign-email-template-" + recipient.getCampaignEmailTemplate().getId();
 
-        QueuedEmailDTO queuedEmail = new QueuedEmailDTO(recipient);
+        var campaignEmailTemplate = recipient.getCampaignEmailTemplate();
+        var emailTemplate = recipient.getCampaignEmailTemplate().getEmailTemplate();
+
+        QueuedEmailDTO queuedEmail = new QueuedEmailDTO(emailTemplate.getSubject(),
+                EmailBodyBuilder.alocateUrl(campaignEmailTemplate.getUrl(), emailTemplate),
+                recipient.getEmail());
 
         try {
             String message = objectMapper.writeValueAsString(queuedEmail);
