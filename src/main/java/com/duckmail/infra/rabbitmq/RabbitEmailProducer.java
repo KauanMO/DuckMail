@@ -33,9 +33,17 @@ public class RabbitEmailProducer {
         var campaignEmailTemplate = recipient.getCampaignEmailTemplate();
         var emailTemplate = recipient.getCampaignEmailTemplate().getEmailTemplate();
 
+        EmailBodyBuilder emailBodyBuilder = new EmailBodyBuilder(emailTemplate);
+
+        String emailBody = emailBodyBuilder
+                .alocateUrl(campaignEmailTemplate.getUrl())
+                .applyWatermark(recipient)
+                .build();
+
         QueuedEmailDTO queuedEmail = new QueuedEmailDTO(emailTemplate.getSubject(),
-                EmailBodyBuilder.alocateUrl(campaignEmailTemplate.getUrl(), emailTemplate),
-                recipient.getEmail());
+                emailBody,
+                recipient.getEmail(),
+                recipient.getId());
 
         try {
             String message = objectMapper.writeValueAsString(queuedEmail);

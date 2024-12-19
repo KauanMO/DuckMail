@@ -28,7 +28,7 @@ public class RabbitEmailConsumer {
 
             emailSenderService.sendQueuedEmail(queuedEmail);
         } catch (JsonProcessingException e) {
-            deliveryErrorLogService.registerError(e.getMessage(), LocalDateTime.now().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime());
+            deliveryErrorLogService.registerError(e.getMessage(), LocalDateTime.now().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), Long.valueOf("0"));
         }
     }
 }

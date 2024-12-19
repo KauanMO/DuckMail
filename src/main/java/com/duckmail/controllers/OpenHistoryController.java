@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 
 @RestController
 @RequestMapping("open")
@@ -20,8 +22,8 @@ public class OpenHistoryController {
     }
 
     @GetMapping("register")
-    public ResponseEntity<?> createOpen(@RequestParam LocalDateTime openedDate, @RequestParam Long recipientId) throws Exception {
-        openHistoryService.create(new InOpenHistoryDTO(openedDate, recipientId));
+    public ResponseEntity<?> createOpen(@RequestParam Long recipientId) throws Exception {
+        openHistoryService.create(new InOpenHistoryDTO(LocalDateTime.now().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), recipientId));
 
         return ResponseEntity.ok().build();
     }
