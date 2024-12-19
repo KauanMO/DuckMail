@@ -3,6 +3,7 @@ package com.duckmail.dtos.email;
 public record QueuedEmailDTO(
         String subject,
         String body,
-        String to
+        String to,
+        Long recipientId
 ) {
 }
