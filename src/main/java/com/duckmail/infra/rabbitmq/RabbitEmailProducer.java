@@ -15,11 +15,13 @@ public class RabbitEmailProducer {
     private final RabbitAdmin rabbitAdmin;
     private final RabbitTemplate rabbitTemplate;
     private final ObjectMapper objectMapper;
+    private final EmailBodyBuilder emailBodyBuilder;
 
-    public RabbitEmailProducer(RabbitAdmin rabbitAdmin, RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
+    public RabbitEmailProducer(RabbitAdmin rabbitAdmin, RabbitTemplate rabbitTemplate, ObjectMapper objectMapper, EmailBodyBuilder emailBodyBuilder) {
         this.rabbitAdmin = rabbitAdmin;
         this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
+        this.emailBodyBuilder = emailBodyBuilder;
     }
 
     public void generateEmailQueue(Long campaignEmailTemplateId) {
@@ -30,13 +32,11 @@ public class RabbitEmailProducer {
     public void enqueueRecipient(Recipient recipient) {
         String queueName = "campaign-email-template-" + recipient.getCampaignEmailTemplate().getId();
 
-        var campaignEmailTemplate = recipient.getCampaignEmailTemplate();
         var emailTemplate = recipient.getCampaignEmailTemplate().getEmailTemplate();
 
-        EmailBodyBuilder emailBodyBuilder = new EmailBodyBuilder(emailTemplate);
-
         String emailBody = emailBodyBuilder
-                .alocateUrl(campaignEmailTemplate.getUrl())
+                .setBody(emailTemplate.getHtmlBody() != null ? emailTemplate.getHtmlBody() : emailTemplate.getTextBody())
+                .alocateUrl(recipient)
                 .applyWatermark(recipient)
                 .build();
 
