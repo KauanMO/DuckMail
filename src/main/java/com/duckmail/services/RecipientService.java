@@ -8,5 +8,5 @@ import com.duckmail.models.Recipient;
 public interface RecipientService extends Writable<Recipient, InRecipientDTO>,
         Readable<Recipient, Long>,
         ListWritable<OutValidRecipientsSegregationDTO, InRecipientDTO> {
-    Recipient changeRecipientStatus(Long id, RecipientStatus newStatus);
+    void changeRecipientStatus(Long id, RecipientStatus newStatus);
 }
