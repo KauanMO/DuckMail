@@ -32,7 +32,7 @@ public class RecipientServiceImpl implements RecipientService {
     public Recipient create(InRecipientDTO dto) throws ConflictException, NotFoundException {
         CampaignEmailTemplate campaignEmailTemplateFound = campaignEmailTemplateService.findById(dto.campaignEmailTemplateId());
 
-        if (!UniqueRecipientInCampaignEmailTemplate(campaignEmailTemplateFound, dto.email()))
+        if (Boolean.FALSE.equals(uniqueRecipientInCampaignEmailTemplate(campaignEmailTemplateFound, dto.email())))
             throw new ConflictException();
 
         Recipient newRecipient = Recipient.builder()
@@ -71,7 +71,7 @@ public class RecipientServiceImpl implements RecipientService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    private Boolean UniqueRecipientInCampaignEmailTemplate(CampaignEmailTemplate cet, String email) {
+    private Boolean uniqueRecipientInCampaignEmailTemplate(CampaignEmailTemplate cet, String email) {
         return cet.getRecipients().stream()
                 .noneMatch(recipient ->
                         recipient.getEmail()
