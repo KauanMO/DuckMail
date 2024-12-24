@@ -1,7 +1,9 @@
 package com.duckmail.infra.email;
 
 import com.duckmail.dtos.email.QueuedEmailDTO;
+import com.duckmail.enums.RecipientStatus;
 import com.duckmail.services.DeliveryErrorLogService;
+import com.duckmail.services.RecipientService;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -20,11 +22,13 @@ public class EmailSenderService {
     private final JavaMailSender javaMailSender;
     private final JavaMailSender mailSender;
     private final DeliveryErrorLogService deliveryErrorLogService;
+    private final RecipientService recipientService;
 
-    public EmailSenderService(JavaMailSender mailSender, JavaMailSender javaMailSender, DeliveryErrorLogService deliveryErrorLogService) {
+    public EmailSenderService(JavaMailSender mailSender, JavaMailSender javaMailSender, DeliveryErrorLogService deliveryErrorLogService, RecipientService recipientService) {
         this.mailSender = mailSender;
         this.javaMailSender = javaMailSender;
         this.deliveryErrorLogService = deliveryErrorLogService;
+        this.recipientService = recipientService;
     }
 
     public void sendQueuedEmail(QueuedEmailDTO emailDTO) {
@@ -46,8 +50,10 @@ public class EmailSenderService {
             helper.addInline("logo", resource);
 
             javaMailSender.send(mimeMessage);
+            recipientService.changeRecipientStatus(recipientId, RecipientStatus.SENT);
         } catch (Exception e) {
             deliveryErrorLogService.registerError(e.getMessage(), LocalDateTime.now().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), recipientId);
+            recipientService.changeRecipientStatus(recipientId, RecipientStatus.FAILED);
         }
     }
 }

@@ -3,6 +3,7 @@ package com.duckmail.services.impl;
 import com.duckmail.dtos.recipient.InRecipientDTO;
 import com.duckmail.dtos.recipient.OutRecipientDTO;
 import com.duckmail.dtos.recipient.OutValidRecipientsSegregationDTO;
+import com.duckmail.enums.RecipientStatus;
 import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
 import com.duckmail.models.CampaignEmailTemplate;
 import com.duckmail.models.Recipient;
@@ -69,6 +70,15 @@ public class RecipientServiceImpl implements RecipientService {
         return repository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public Recipient changeRecipientStatus(Long id, RecipientStatus newStatus) {
+        Recipient recipientFound = repository.findById(id).orElseThrow(NotFoundException::new);
+
+        recipientFound.setStatus(newStatus);
+
+        return repository.save(recipientFound);
     }
 
     private Boolean uniqueRecipientInCampaignEmailTemplate(CampaignEmailTemplate cet, String email) {
