@@ -23,7 +23,7 @@ public class Recipient {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private final RecipientStatus status = RecipientStatus.PENDING;
+    private RecipientStatus status = RecipientStatus.PENDING;
 
     private LocalDateTime sentDate;
     private final LocalDateTime createdDate = LocalDateTime.now();

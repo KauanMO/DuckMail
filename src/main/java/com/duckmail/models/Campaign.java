@@ -32,7 +32,7 @@ public class Campaign {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    private final CampaignStatus status = CampaignStatus.PENDING;
+    private CampaignStatus status = CampaignStatus.PENDING;
 
     private final LocalDateTime createdDate = LocalDateTime.now();
     private LocalDateTime scheduledDate;
