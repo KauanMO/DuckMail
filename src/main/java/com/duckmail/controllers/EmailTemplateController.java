@@ -1,8 +1,6 @@
 package com.duckmail.controllers;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
+import org.quartz.SchedulerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +25,10 @@ public class EmailTemplateController {
     }
 
     @PostMapping
-    public ResponseEntity<OutEmailTemplateDTO> postEmailTemplate(@RequestBody InEmailTemplateDTO dto) throws URISyntaxException, Exception {
+    public ResponseEntity<OutEmailTemplateDTO> postEmailTemplate(@RequestBody InEmailTemplateDTO dto) throws SchedulerException {
         EmailTemplate newEmailTemplate = service.create(dto);
 
-        URI newEmailTemplateURI = new URI("/" + newEmailTemplate.getId());
-
-        return ResponseEntity.created(newEmailTemplateURI).body(new OutEmailTemplateDTO(newEmailTemplate));
+        return ResponseEntity.ok(new OutEmailTemplateDTO(newEmailTemplate));
     }
 
 }

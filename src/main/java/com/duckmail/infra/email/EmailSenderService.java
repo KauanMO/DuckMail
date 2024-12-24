@@ -7,7 +7,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -17,7 +16,7 @@ import java.time.ZoneId;
 
 @Component
 public class EmailSenderService {
-    private final String EMAIL_FROM = "DuckMail";
+    private static final String emailFrom = "DuckMail";
     private final JavaMailSender javaMailSender;
     private final JavaMailSender mailSender;
     private final DeliveryErrorLogService deliveryErrorLogService;
@@ -32,13 +31,12 @@ public class EmailSenderService {
         sendEmail(emailDTO.to(), emailDTO.subject(), emailDTO.body(), emailDTO.recipientId());
     }
 
-    @Async
     protected void sendEmail(String to, String subject, String body, Long recipientId) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
 
-            helper.setFrom(EMAIL_FROM);
+            helper.setFrom(emailFrom);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true);

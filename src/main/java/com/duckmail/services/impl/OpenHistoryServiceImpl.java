@@ -19,7 +19,7 @@ public class OpenHistoryServiceImpl implements OpenHistoryService {
     }
 
     @Override
-    public OpenHistory create(InOpenHistoryDTO dto) throws Exception {
+    public OpenHistory create(InOpenHistoryDTO dto) {
         Recipient recipientFound = recipientService.findById(dto.recipientId());
 
         OpenHistory openHistory = OpenHistory.builder()
