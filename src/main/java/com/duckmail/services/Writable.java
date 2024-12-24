@@ -1,5 +1,9 @@
 package com.duckmail.services;
 
-public interface Writable<ENTITY, DTO> {
-    public ENTITY create(DTO dto) throws Exception;
+import com.duckmail.services.exception.ConflictException;
+import com.duckmail.services.exception.NotFoundException;
+import org.quartz.SchedulerException;
+
+public interface Writable<T, D> {
+    public T create(D dto) throws ConflictException, NotFoundException, SchedulerException;
 }

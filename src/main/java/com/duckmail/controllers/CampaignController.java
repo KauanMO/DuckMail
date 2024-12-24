@@ -1,8 +1,6 @@
 package com.duckmail.controllers;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
+import org.quartz.SchedulerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,11 +22,9 @@ public class CampaignController {
     }
 
     @PostMapping
-    public ResponseEntity<OutCampaignDTO> postCampaign(@RequestBody InCampaignDTO dto) throws URISyntaxException, Exception {
+    public ResponseEntity<OutCampaignDTO> postCampaign(@RequestBody InCampaignDTO dto) throws SchedulerException {
         Campaign newCampaign = service.create(dto);
 
-        URI newCampaignURL = new URI("/" + newCampaign.getId());
-
-        return ResponseEntity.created(newCampaignURL).body(new OutCampaignDTO(newCampaign));
+        return ResponseEntity.ok(new OutCampaignDTO(newCampaign));
     }
 }

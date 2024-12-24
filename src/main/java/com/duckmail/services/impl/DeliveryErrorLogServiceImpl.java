@@ -4,11 +4,9 @@ import com.duckmail.models.DeliveryErrorLog;
 import com.duckmail.models.Recipient;
 import com.duckmail.repositories.DeliveryErrorLogRepository;
 import com.duckmail.services.DeliveryErrorLogService;
-import com.duckmail.services.RecipientService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class DeliveryErrorLogServiceImpl implements DeliveryErrorLogService {

@@ -1,7 +1,9 @@
 package com.duckmail.controllers;
 
+import com.duckmail.dtos.dashboard.OutTotalOpenHistoriesDTO;
 import com.duckmail.dtos.openHistory.InOpenHistoryDTO;
 import com.duckmail.services.OpenHistoryService;
+import org.quartz.SchedulerException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +24,7 @@ public class OpenHistoryController {
     }
 
     @GetMapping("register")
-    public ResponseEntity<?> createOpen(@RequestParam Long recipientId) throws Exception {
+    public ResponseEntity<OutTotalOpenHistoriesDTO> createOpen(@RequestParam Long recipientId) throws SchedulerException {
         openHistoryService.create(new InOpenHistoryDTO(LocalDateTime.now().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime(), recipientId));
 
         return ResponseEntity.ok().build();

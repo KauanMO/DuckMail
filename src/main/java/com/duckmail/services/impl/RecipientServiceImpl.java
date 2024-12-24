@@ -3,6 +3,7 @@ package com.duckmail.services.impl;
 import com.duckmail.dtos.recipient.InRecipientDTO;
 import com.duckmail.dtos.recipient.OutRecipientDTO;
 import com.duckmail.dtos.recipient.OutValidRecipientsSegregationDTO;
+import com.duckmail.enums.RecipientStatus;
 import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
 import com.duckmail.models.CampaignEmailTemplate;
 import com.duckmail.models.Recipient;
@@ -32,7 +33,7 @@ public class RecipientServiceImpl implements RecipientService {
     public Recipient create(InRecipientDTO dto) throws ConflictException, NotFoundException {
         CampaignEmailTemplate campaignEmailTemplateFound = campaignEmailTemplateService.findById(dto.campaignEmailTemplateId());
 
-        if (!UniqueRecipientInCampaignEmailTemplate(campaignEmailTemplateFound, dto.email()))
+        if (Boolean.FALSE.equals(uniqueRecipientInCampaignEmailTemplate(campaignEmailTemplateFound, dto.email())))
             throw new ConflictException();
 
         Recipient newRecipient = Recipient.builder()
@@ -71,7 +72,16 @@ public class RecipientServiceImpl implements RecipientService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    private Boolean UniqueRecipientInCampaignEmailTemplate(CampaignEmailTemplate cet, String email) {
+    @Override
+    public Recipient changeRecipientStatus(Long id, RecipientStatus newStatus) {
+        Recipient recipientFound = repository.findById(id).orElseThrow(NotFoundException::new);
+
+        recipientFound.setStatus(newStatus);
+
+        return repository.save(recipientFound);
+    }
+
+    private Boolean uniqueRecipientInCampaignEmailTemplate(CampaignEmailTemplate cet, String email) {
         return cet.getRecipients().stream()
                 .noneMatch(recipient ->
                         recipient.getEmail()

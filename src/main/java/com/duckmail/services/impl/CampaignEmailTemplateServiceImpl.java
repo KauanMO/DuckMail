@@ -39,7 +39,7 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
     }
 
     @Override
-    public CampaignEmailTemplate create(InCampaignEmailTemplateDTO dto) throws Exception {
+    public CampaignEmailTemplate create(InCampaignEmailTemplateDTO dto) throws SchedulerException {
         Campaign campaignFound = campaignService.findById(dto.campaignId());
 
         if (campaignFound

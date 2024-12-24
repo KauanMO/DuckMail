@@ -1,5 +1,6 @@
 package com.duckmail.services.impl;
 
+import com.duckmail.services.exception.BadRequestException;
 import com.duckmail.services.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,9 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
     }
 
     @Override
-    public EmailTemplate create(InEmailTemplateDTO dto) throws Exception {
-        if ((dto.htmlBody() == null && dto.textBody() == null) || (dto.htmlBody() != null && dto.textBody() != null)) 
-            throw new Exception("Atribua apenas um corpo html OU de texto ao template de email (Implementar global handler de exceções)");
+    public EmailTemplate create(InEmailTemplateDTO dto) {
+        if ((dto.htmlBody() == null && dto.textBody() == null) || (dto.htmlBody() != null && dto.textBody() != null))
+            throw new BadRequestException("Atribua apenas um corpo html OU de texto ao template de email (Implementar global handler de exceções)");
 
         EmailTemplate newEmailTemplate = EmailTemplate.builder()
                 .name(dto.name())
@@ -37,5 +38,5 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
         return repository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);
-   }
+    }
 }
