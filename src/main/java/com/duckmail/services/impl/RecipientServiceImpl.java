@@ -14,6 +14,8 @@ import com.duckmail.services.exception.ConflictException;
 import com.duckmail.services.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,12 +75,14 @@ public class RecipientServiceImpl implements RecipientService {
     }
 
     @Override
-    public Recipient changeRecipientStatus(Long id, RecipientStatus newStatus) {
+    public void changeRecipientStatus(Long id, RecipientStatus newStatus) {
         Recipient recipientFound = repository.findById(id).orElseThrow(NotFoundException::new);
 
         recipientFound.setStatus(newStatus);
+        if (newStatus.equals(RecipientStatus.SENT))
+            recipientFound.setSentDate(LocalDateTime.now().atZone(ZoneId.of("America/Sao_Paulo")).toLocalDateTime());
 
-        return repository.save(recipientFound);
+        repository.save(recipientFound);
     }
 
     private Boolean uniqueRecipientInCampaignEmailTemplate(CampaignEmailTemplate cet, String email) {

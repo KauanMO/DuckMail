@@ -1,28 +1,24 @@
 package com.duckmail.infra.email;
 
-import com.duckmail.infra.rabbitmq.EmailQueueListenerService;
-import com.duckmail.infra.rabbitmq.RabbitEmailConsumer;
+import com.duckmail.infra.rabbitmq.RabbitEmailListener;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RegisterEmailQueueListenerJob implements Job {
-    private final RabbitEmailConsumer rabbitEmailConsumer;
-    private final EmailQueueListenerService emailQueueListenerService;
+    private final RabbitEmailListener rabbitEmailListener;
 
-    public RegisterEmailQueueListenerJob(RabbitEmailConsumer rabbitEmailConsumer, EmailQueueListenerService emailQueueListenerService) {
-        this.rabbitEmailConsumer = rabbitEmailConsumer;
-        this.emailQueueListenerService = emailQueueListenerService;
+    public RegisterEmailQueueListenerJob(RabbitEmailListener rabbitEmailListener) {
+        this.rabbitEmailListener = rabbitEmailListener;
     }
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
         Long campaignEmailTemplateId = jobDataMap.getLong("campaignEmailTemplateId");
 
-        emailQueueListenerService.registerListener(campaignEmailTemplateId, rabbitEmailConsumer);
+        rabbitEmailListener.registerListener(campaignEmailTemplateId);
     }
 }
