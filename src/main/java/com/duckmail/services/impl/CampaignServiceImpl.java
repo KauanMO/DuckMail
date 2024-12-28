@@ -43,4 +43,12 @@ public class CampaignServiceImpl implements CampaignService {
     public List<Campaign> getPendingCampaigns() {
         return repository.findByStatusIs(CampaignStatus.PENDING);
     }
+
+    @Override
+    public Campaign changeCampaignStatus(Long campaignId, CampaignStatus newStatus) {
+        Campaign campaignFound = repository.findById(campaignId).orElseThrow(NotFoundException::new);
+        campaignFound.setStatus(newStatus);
+
+        return repository.save(campaignFound);
+    }
 }
