@@ -20,12 +20,10 @@ import java.time.ZoneId;
 public class EmailSenderService {
     private static final String emailFrom = "DuckMail";
     private final JavaMailSender javaMailSender;
-    private final JavaMailSender mailSender;
     private final DeliveryErrorLogService deliveryErrorLogService;
     private final RecipientService recipientService;
 
-    public EmailSenderService(JavaMailSender mailSender, JavaMailSender javaMailSender, DeliveryErrorLogService deliveryErrorLogService, RecipientService recipientService) {
-        this.mailSender = mailSender;
+    public EmailSenderService(JavaMailSender javaMailSender, DeliveryErrorLogService deliveryErrorLogService, RecipientService recipientService) {
         this.javaMailSender = javaMailSender;
         this.deliveryErrorLogService = deliveryErrorLogService;
         this.recipientService = recipientService;
@@ -37,17 +35,13 @@ public class EmailSenderService {
 
     protected void sendEmail(String to, String subject, String body, Long recipientId) {
         try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "utf-8");
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "utf-8");
 
             helper.setFrom(emailFrom);
             helper.setTo(to);
             helper.setSubject(subject);
             helper.setText(body, true);
-
-            Path path = Paths.get("src/main/java/com/duckmail/assets/logo.png");
-            Resource resource = new FileSystemResource(path.toFile());
-            helper.addInline("logo", resource);
 
             javaMailSender.send(mimeMessage);
             recipientService.changeRecipientStatus(recipientId, RecipientStatus.SENT);
