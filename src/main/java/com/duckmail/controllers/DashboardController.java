@@ -1,6 +1,7 @@
 package com.duckmail.controllers;
 
 import com.duckmail.dtos.dashboard.*;
+import com.duckmail.models.Campaign;
 import com.duckmail.services.DashboardService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("dashboard")
@@ -51,5 +53,12 @@ public class DashboardController {
         List<OutCampaignsTotalOpeningsDTO> campaignsTotalOpeningsDTO = service.getCampaignsTotalOpenings();
 
         return ResponseEntity.ok(campaignsTotalOpeningsDTO);
+    }
+
+    @GetMapping("total-openings-by-hour-campaign")
+    public ResponseEntity<Map<String, Map<String, Integer>>> getTotalOpeningsByHourCampaign() {
+        Map<String, Map<String, Integer>> totalOpeningsByHourCampaign = service.getTotalOpeningsByHour();
+
+        return ResponseEntity.ok(totalOpeningsByHourCampaign);
     }
 }
