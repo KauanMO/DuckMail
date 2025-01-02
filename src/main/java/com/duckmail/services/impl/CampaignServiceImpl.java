@@ -51,4 +51,9 @@ public class CampaignServiceImpl implements CampaignService {
 
         return repository.save(campaignFound);
     }
+
+    @Override
+    public List<Campaign> getAllCampaigns() {
+        return repository.findAll();
+    }
 }

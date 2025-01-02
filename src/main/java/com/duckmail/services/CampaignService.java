@@ -11,4 +11,6 @@ public interface CampaignService extends Writable<Campaign, InCampaignDTO>,
     List<Campaign> getPendingCampaigns();
 
     Campaign changeCampaignStatus(Long campaignId, CampaignStatus newStatus);
+
+    List<Campaign> getAllCampaigns();
 }
