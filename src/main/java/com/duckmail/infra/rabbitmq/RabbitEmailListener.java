@@ -2,29 +2,25 @@ package com.duckmail.infra.rabbitmq;
 
 import com.duckmail.dtos.email.QueuedEmailDTO;
 import com.duckmail.enums.CampaignStatus;
-import com.duckmail.infra.email.EmailSenderService;
 import com.duckmail.models.CampaignEmailTemplate;
 import com.duckmail.services.CampaignEmailTemplateService;
 import com.duckmail.services.CampaignService;
 import com.duckmail.services.DeliveryErrorLogService;
+import com.duckmail.services.impl.EmailSenderLambdaService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rabbitmq.client.Channel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.AcknowledgeMode;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.stereotype.Service;
-
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 public class RabbitEmailListener {
     private final ConnectionFactory connectionFactory;
     private final ObjectMapper objectMapper;
-    private final EmailSenderService emailSenderService;
+    private final EmailSenderLambdaService emailSenderLambdaService;
     private final DeliveryErrorLogService deliveryErrorLogService;
     private final CampaignService campaignService;
     private final CampaignEmailTemplateService campaignEmailTemplateService;
@@ -50,7 +46,7 @@ public class RabbitEmailListener {
     private void consumeMessage(Message message) {
         try {
             var queuedEmail = objectMapper.readValue(message.getBody(), QueuedEmailDTO.class);
-            emailSenderService.sendQueuedEmail(queuedEmail);
+            emailSenderLambdaService.invokeLambda(queuedEmail);
 
             this.messageCount--;
 

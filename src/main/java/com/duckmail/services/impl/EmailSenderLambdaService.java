@@ -36,8 +36,6 @@ public class EmailSenderLambdaService implements LambdaService<QueuedEmailDTO> {
 
         InvokeResult result = awsLambda.invoke(request);
 
-        System.out.println(result);
-
         return ResponseEntity.status(result.getStatusCode()).body(StandardCharsets.UTF_8.decode(result.getPayload()).toString());
     }
 }
