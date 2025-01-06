@@ -16,6 +16,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+@Deprecated
 @Component
 public class EmailSenderService {
     private static final String emailFrom = "DuckMail";
