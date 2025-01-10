@@ -2,8 +2,10 @@ package com.duckmail.services.impl;
 
 import com.duckmail.infra.email.RegisterEmailQueueListenerJob;
 import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
+import com.duckmail.services.QuartzSchedulerService;
 import com.duckmail.services.exception.BadRequestException;
 import com.duckmail.services.exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.quartz.*;
 import org.springframework.stereotype.Service;
 
@@ -21,22 +23,12 @@ import java.time.ZoneId;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateService {
     private final CampaignEmailTemplateRepository repository;
     private final CampaignService campaignService;
     private final EmailTemplateService emailTemplateService;
     private final RabbitEmailProducer rabbitEmailProducer;
-    private final Scheduler scheduler;
-
-    public CampaignEmailTemplateServiceImpl(CampaignService campaignService,
-                                            EmailTemplateService emailTemplateService,
-                                            CampaignEmailTemplateRepository repository, RabbitEmailProducer rabbitEmailProducer, Scheduler scheduler) {
-        this.campaignService = campaignService;
-        this.emailTemplateService = emailTemplateService;
-        this.repository = repository;
-        this.rabbitEmailProducer = rabbitEmailProducer;
-        this.scheduler = scheduler;
-    }
 
     @Override
     public CampaignEmailTemplate create(InCampaignEmailTemplateDTO dto) throws SchedulerException {
@@ -62,25 +54,7 @@ public class CampaignEmailTemplateServiceImpl implements CampaignEmailTemplateSe
 
         rabbitEmailProducer.generateEmailQueue(newCampaignEmailTemplate.getId());
 
-        scheduleCampaignEmailTemplate(newCampaignEmailTemplate);
-
         return newCampaignEmailTemplate;
-    }
-
-    private void scheduleCampaignEmailTemplate(CampaignEmailTemplate campaignEmailTemplate) throws SchedulerException {
-        LocalDateTime campaignScheduledDate = campaignEmailTemplate.getCampaign().getScheduledDate();
-
-        JobDetail jobDetail = JobBuilder.newJob(RegisterEmailQueueListenerJob.class)
-                .withIdentity("Campaign-email-template-job-" + campaignEmailTemplate.getId())
-                .usingJobData("campaignEmailTemplateId", campaignEmailTemplate.getId())
-                .build();
-
-        Trigger trigger = TriggerBuilder.newTrigger()
-                .withIdentity("Campaign-email-template-trigger-" + campaignEmailTemplate.getId())
-                .startAt(Date.from(campaignScheduledDate.atZone(ZoneId.of("America/Sao_Paulo")).toInstant()))
-                .build();
-
-        scheduler.scheduleJob(jobDetail, trigger);
     }
 
     @Override

@@ -26,12 +26,12 @@ public class RabbitEmailListener {
     private final CampaignEmailTemplateService campaignEmailTemplateService;
     private final RabbitQueueInspector rabbitQueueInspector;
     private String queueName;
-    private Long campaignEmailTemplateId;
+    private CampaignEmailTemplate campaignEmailTemplate;
     private Integer messageCount;
 
-    public void registerListener(Long campaignEmailTemplateId) {
-        this.campaignEmailTemplateId = campaignEmailTemplateId;
-        this.queueName = "campaign-email-template-" + campaignEmailTemplateId;
+    public void registerListener(CampaignEmailTemplate campaignEmailTemplate) {
+        this.campaignEmailTemplate = campaignEmailTemplate;
+        this.queueName = "campaign-email-template-" + campaignEmailTemplate.getId();
         this.messageCount = rabbitQueueInspector.getMessageCount(queueName);
 
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
@@ -51,9 +51,7 @@ public class RabbitEmailListener {
             this.messageCount--;
 
             if (this.messageCount < 1) {
-                CampaignEmailTemplate campaignEmailTemplateFound = campaignEmailTemplateService.findById(campaignEmailTemplateId);
-
-                campaignService.changeCampaignStatus(campaignEmailTemplateFound.getCampaign().getId(), CampaignStatus.COMPLETED);
+                campaignService.updateCampaignStatus(campaignEmailTemplate.getCampaign().getId(), CampaignStatus.COMPLETED);
 
                 rabbitQueueInspector.deleteQueue(queueName);
             }
