@@ -6,7 +6,12 @@ import com.duckmail.models.CampaignEmailTemplate;
 import com.duckmail.services.CampaignEmailTemplateService;
 import com.duckmail.services.CampaignService;
 import com.duckmail.services.DeliveryErrorLogService;
+import com.duckmail.services.exception.BadRequestException;
+import com.duckmail.services.exception.EmailSenderException;
 import com.duckmail.services.impl.EmailSenderLambdaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.core.AcknowledgeMode;
@@ -15,15 +20,16 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class RabbitEmailListener {
     private final ConnectionFactory connectionFactory;
     private final ObjectMapper objectMapper;
     private final EmailSenderLambdaService emailSenderLambdaService;
-    private final DeliveryErrorLogService deliveryErrorLogService;
     private final CampaignService campaignService;
-    private final CampaignEmailTemplateService campaignEmailTemplateService;
     private final RabbitQueueInspector rabbitQueueInspector;
     private String queueName;
     private CampaignEmailTemplate campaignEmailTemplate;
@@ -55,9 +61,8 @@ public class RabbitEmailListener {
 
                 rabbitQueueInspector.deleteQueue(queueName);
             }
-        } catch (Exception e) {
-            System.out.println("erro: " + e.getMessage());
-            throw new RuntimeException("Erro ao consumir mensagem", e);
+        } catch (IOException e) {
+            throw new BadRequestException("Erro ao reconhecer corpo de email");
         }
     }
 }
