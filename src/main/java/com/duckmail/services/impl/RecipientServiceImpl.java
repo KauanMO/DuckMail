@@ -66,7 +66,7 @@ public class RecipientServiceImpl implements RecipientService {
     }
 
     @Override
-    public Recipient findById(Long id) throws NotFoundException {
+    public Recipient findById(Long id) {
         return repository
                 .findById(id)
                 .orElseThrow(NotFoundException::new);

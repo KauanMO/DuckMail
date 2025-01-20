@@ -1,8 +1,7 @@
-package com.duckmail.services;
+package com.duckmail.services.impl;
 
 import com.duckmail.TestDataFactory;
 import com.duckmail.dtos.recipient.InRecipientDTO;
-import com.duckmail.dtos.recipient.OutRecipientDTO;
 import com.duckmail.dtos.recipient.OutValidRecipientsSegregationDTO;
 import com.duckmail.enums.RecipientStatus;
 import com.duckmail.infra.rabbitmq.RabbitEmailProducer;
@@ -11,9 +10,8 @@ import com.duckmail.models.CampaignEmailTemplate;
 import com.duckmail.models.EmailTemplate;
 import com.duckmail.models.Recipient;
 import com.duckmail.repositories.RecipientRepository;
+import com.duckmail.services.CampaignEmailTemplateService;
 import com.duckmail.services.exception.ConflictException;
-import com.duckmail.services.impl.RecipientServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -127,6 +125,21 @@ class RecipientServiceTest {
         assertEquals(recipientsSegregationDTO.validRecipients().size(), recipientsSegregationDTO.invalidRecipients().size());
         assertEquals(recipientsSegregationDTO.validRecipients().getFirst().email(), recipients.getFirst().getEmail());
         assertEquals(recipientsSegregationDTO.invalidRecipients().getFirst().email(), recipients.getLast().getEmail());
+    }
+
+    @Test
+    @DisplayName("Find Recipient by id successfully")
+    void findRecipientByIdOK() {
+        Campaign campaign = TestDataFactory.generateCampaign(1L);
+        EmailTemplate emailTemplate = TestDataFactory.generateEmailTemplate(1L);
+        CampaignEmailTemplate campaignEmailTemplate = TestDataFactory.generateCampaignEmailTemplate(1L, campaign, emailTemplate);
+        Recipient recipient = TestDataFactory.generateRecipient(1L, campaignEmailTemplate, true);
+
+        when(repository.findById(1L)).thenReturn(Optional.of(recipient));
+
+        Recipient recipientFound = recipientService.findById(recipient.getId());
+
+        assertEquals(recipientFound.getEmail(), recipient.getEmail());
     }
 
     @Test
