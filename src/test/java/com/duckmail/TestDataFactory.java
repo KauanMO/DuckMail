@@ -69,4 +69,18 @@ public class TestDataFactory {
 
         return recipient;
     }
+
+    public static Recipient generateRecipient(Long id, String email, CampaignEmailTemplate campaignEmailTemplate, Boolean registerToCampaignEmailTemplate) {
+        Recipient recipient = new Recipient(id,
+                email,
+                RECIPIENT_STANDARDS.get("RECIPIENT_NAME_1"),
+                RecipientStatus.PENDING,
+                null,
+                campaignEmailTemplate,
+                null);
+
+        if (registerToCampaignEmailTemplate) campaignEmailTemplate.getRecipients().add(recipient);
+
+        return recipient;
+    }
 }

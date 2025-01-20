@@ -12,6 +12,7 @@ import com.duckmail.services.CampaignEmailTemplateService;
 import com.duckmail.services.RecipientService;
 import com.duckmail.services.exception.ConflictException;
 import com.duckmail.services.exception.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,16 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RecipientServiceImpl implements RecipientService {
     private final RecipientRepository repository;
     private final CampaignEmailTemplateService campaignEmailTemplateService;
     private final RabbitEmailProducer rabbitEmailProducer;
-
-    public RecipientServiceImpl(RecipientRepository repository, CampaignEmailTemplateService campaignEmailTemplateService, RabbitEmailProducer rabbitEmailProducer) {
-        this.repository = repository;
-        this.campaignEmailTemplateService = campaignEmailTemplateService;
-        this.rabbitEmailProducer = rabbitEmailProducer;
-    }
 
     @Override
     public Recipient create(InRecipientDTO dto) throws ConflictException, NotFoundException {
@@ -58,6 +54,8 @@ public class RecipientServiceImpl implements RecipientService {
 
         for (var dto : dtos) {
             try {
+                create(dto);
+
                 newRecipients.add(new OutRecipientDTO(this.create(dto)));
             } catch (ConflictException | NotFoundException exception) {
                 invalidRecipients.add(dto);
