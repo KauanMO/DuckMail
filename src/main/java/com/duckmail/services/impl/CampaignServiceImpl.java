@@ -2,6 +2,7 @@ package com.duckmail.services.impl;
 
 import com.duckmail.enums.CampaignStatus;
 import com.duckmail.services.QuartzSchedulerService;
+import com.duckmail.services.exception.BadRequestException;
 import com.duckmail.services.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.quartz.SchedulerException;
@@ -22,7 +23,7 @@ public class CampaignServiceImpl implements CampaignService {
     private final QuartzSchedulerService quartzSchedulerService;
 
     @Override
-    public Campaign create(InCampaignDTO dto) throws SchedulerException {
+    public Campaign create(InCampaignDTO dto) {
         Campaign newCampaign = Campaign.builder()
                 .name(dto.name())
                 .description(dto.description())
@@ -62,7 +63,7 @@ public class CampaignServiceImpl implements CampaignService {
     }
 
     @Override
-    public Campaign updateCampaignScheduledDate(Long campaignId, LocalDateTime newScheduledDate) throws SchedulerException {
+    public Campaign updateCampaignScheduledDate(Long campaignId, LocalDateTime newScheduledDate) {
         Campaign campaignFound = repository.findById(campaignId).orElseThrow(NotFoundException::new);
         campaignFound.setScheduledDate(newScheduledDate);
 
