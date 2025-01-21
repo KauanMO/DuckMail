@@ -2,10 +2,7 @@ package com.duckmail;
 
 import com.duckmail.enums.CampaignStatus;
 import com.duckmail.enums.RecipientStatus;
-import com.duckmail.models.Campaign;
-import com.duckmail.models.CampaignEmailTemplate;
-import com.duckmail.models.EmailTemplate;
-import com.duckmail.models.Recipient;
+import com.duckmail.models.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -82,5 +79,12 @@ public class TestDataFactory {
         if (registerToCampaignEmailTemplate) campaignEmailTemplate.getRecipients().add(recipient);
 
         return recipient;
+    }
+
+    public static ClickHistory generateClickHistory(Long id, Recipient recipient) {
+        return new ClickHistory(id, "Chrome 1.0",
+                "Android 12",
+                LocalDateTime.now(),
+                recipient);
     }
 }
