@@ -10,6 +10,7 @@ import com.duckmail.repositories.DeliveryErrorLogRepository;
 import com.duckmail.repositories.OpenHistoryRepository;
 import com.duckmail.services.CampaignService;
 import com.duckmail.services.DashboardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,18 +18,12 @@ import java.time.LocalTime;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class DashboardServiceImpl implements DashboardService {
     private final DeliveryErrorLogRepository deliveryErrorLogRepository;
     private final ClickHistoryRepository clickHistoryRepository;
     private final OpenHistoryRepository openHistoryRepository;
     private final CampaignService campaignService;
-
-    public DashboardServiceImpl(DeliveryErrorLogRepository deliveryErrorLogRepository, ClickHistoryRepository clickHistoryRepository, OpenHistoryRepository openHistoryRepository, CampaignService campaignService) {
-        this.deliveryErrorLogRepository = deliveryErrorLogRepository;
-        this.clickHistoryRepository = clickHistoryRepository;
-        this.openHistoryRepository = openHistoryRepository;
-        this.campaignService = campaignService;
-    }
 
     @Override
     public Long getTotalDeliveryErrors() {
