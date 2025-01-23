@@ -18,7 +18,6 @@ public class DeliveryErrorLogServiceImpl implements DeliveryErrorLogService {
 
     @Override
     public void registerError(String message, LocalDateTime datetime, Long recipientId) {
-
         DeliveryErrorLog newDeliveryErrorLog = DeliveryErrorLog.builder()
                 .message(message)
                 .date(datetime)
