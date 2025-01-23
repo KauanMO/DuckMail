@@ -29,11 +29,17 @@ public class TestDataFactory {
     }};
 
     public static CampaignEmailTemplate generateCampaignEmailTemplate(Long id, Campaign campaign, EmailTemplate emailTemplate) {
-        return new CampaignEmailTemplate(id,
+        CampaignEmailTemplate campaignEmailTemplate = new CampaignEmailTemplate(id,
                 CAMPAIGN_EMAIL_TEMPLATE_STANDARDS.get("CAMPAIGN_EMAIL_TEMPLATE_URL"),
                 campaign,
                 emailTemplate
         );
+
+        campaign.getCampaignEmailTemplates().add(campaignEmailTemplate);
+        emailTemplate.getCampaignEmailTemplates().add(campaignEmailTemplate);
+
+
+        return campaignEmailTemplate;
     }
 
     public static Campaign generateCampaign(Long id) {
@@ -86,5 +92,25 @@ public class TestDataFactory {
                 "Android 12",
                 LocalDateTime.now(),
                 recipient);
+    }
+
+    public static OpenHistory generateOpenHistory(Long id, Recipient recipient) {
+        return new OpenHistory(
+                id,
+                LocalDateTime.now(),
+                recipient
+        );
+    }
+
+    public static OpenHistory generateOpenHistory(Long id, Recipient recipient, Boolean registerToRecipient) {
+        OpenHistory openHistory = new OpenHistory(
+                id,
+                LocalDateTime.now(),
+                recipient
+        );
+
+        if (registerToRecipient) recipient.getOpenHistories().add(openHistory);
+
+        return openHistory;
     }
 }
