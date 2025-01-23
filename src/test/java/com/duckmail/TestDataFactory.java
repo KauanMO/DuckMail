@@ -94,14 +94,6 @@ public class TestDataFactory {
                 recipient);
     }
 
-    public static OpenHistory generateOpenHistory(Long id, Recipient recipient) {
-        return new OpenHistory(
-                id,
-                LocalDateTime.now(),
-                recipient
-        );
-    }
-
     public static OpenHistory generateOpenHistory(Long id, Recipient recipient, Boolean registerToRecipient) {
         OpenHistory openHistory = new OpenHistory(
                 id,
@@ -112,5 +104,17 @@ public class TestDataFactory {
         if (registerToRecipient) recipient.getOpenHistories().add(openHistory);
 
         return openHistory;
+    }
+
+    public static DeliveryErrorLog generateDeliveryErrorLog(Long id, Recipient recipient, String message) {
+        DeliveryErrorLog deliveryErrorLog = new DeliveryErrorLog(1L,
+                LocalDateTime.now(),
+                message,
+                "500",
+                recipient);
+
+        recipient.setDeliveryErrorLog(deliveryErrorLog);
+
+        return deliveryErrorLog;
     }
 }

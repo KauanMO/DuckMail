@@ -38,6 +38,5 @@ public class Recipient {
     private final List<ClickHistory> clickHistories = new ArrayList<>();
 
     @OneToOne(mappedBy = "recipient")
-    private DeliveryErrorLog deliveryErrorLogs;
-
+    private DeliveryErrorLog deliveryErrorLog;
 }
