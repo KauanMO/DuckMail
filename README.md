@@ -1,3 +1,7 @@
+<center>
+<img src='https://github.com/KauanMO/Bucket/blob/069f6e65d94cd4d0fc3aeaa91d40d63380dd8ac1/DuckMail-fonte-escura.png?raw=true' width='50%'>
+</center>
+
 🇧🇷 Portugues
 
 ## Sobre
