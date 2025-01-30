@@ -19,7 +19,7 @@ public class RegisterEmailQueueListenerJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         JobDataMap jobDataMap = jobExecutionContext.getJobDetail().getJobDataMap();
-        Long campaignId = jobDataMap.getLong("campaignId");
+        Long campaignId = jobDataMap.getLong("campaign");
 
         Campaign campaignFound = campaignService.findById(campaignId);
 

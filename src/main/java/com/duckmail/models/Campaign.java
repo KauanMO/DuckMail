@@ -6,13 +6,7 @@ import java.util.List;
 
 import com.duckmail.enums.CampaignStatus;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -40,6 +34,6 @@ public class Campaign {
     private int sentCount;
     private int totalCount;
 
-    @OneToMany(mappedBy = "campaign")
+    @OneToMany(mappedBy = "campaign", fetch = FetchType.EAGER)
     private final List<CampaignEmailTemplate> campaignEmailTemplates = new ArrayList<>();
 }
