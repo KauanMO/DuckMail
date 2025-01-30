@@ -24,7 +24,7 @@ public class EmailBodyBuilder {
     }
 
     public EmailBodyBuilder applyWatermark(Recipient recipient) {
-        body += String.format("<br><br><br><br> <img width='200px' height='150px' src='%s/open/register?recipientId=%d&unique=%d'>", host, recipient.getId(), System.currentTimeMillis());
+        body += String.format("<br><br><br><br> <img width='150px' height='50px' src='%s/open/register?recipientId=%d&unique=%d'>", host, recipient.getId(), System.currentTimeMillis());
 
         return this;
     }

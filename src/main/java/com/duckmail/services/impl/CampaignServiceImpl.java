@@ -30,9 +30,9 @@ public class CampaignServiceImpl implements CampaignService {
                 .scheduledDate(dto.scheduledDate())
                 .build();
 
-        quartzSchedulerService.scheduleCampaign(newCampaign);
-
         repository.save(newCampaign);
+
+        quartzSchedulerService.scheduleCampaign(newCampaign);
 
         return newCampaign;
     }
