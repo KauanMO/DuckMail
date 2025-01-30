@@ -103,7 +103,7 @@ Create the Lambda function with the ziped package:
 
 ⚠⚠️ Important: Pay attention to the function name, as it is passed in the application's environment variables.
 
-### Aplicação
+### Application
 The service uses default Spring environment variables, but there are also some variables that must be provided for the application to work properly. These can be found in:
 
 `/src/main/resources/META-INF/additional-spring-configuration-metadata.json`
